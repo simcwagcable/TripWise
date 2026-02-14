@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TripWise | Умный поиск путешествий</title>
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/grids-responsive-min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='%230066cc' d='M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256 256-114.6 256-256S397.4 0 256 0z'/><text x='128' y='320' fill='white' font-size='180' font-weight='bold' font-family='Arial'>TW</text></svg>">
+    <!-- Font Awesome для иконок -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    
+    <!-- Дополнительные стили для кастомизации -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #222;
+            background: #fff;
+        }
+
+        .text-contrast {
+            color: #000;
+            font-weight: 600;
+        }
+
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #eaeaea;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            text-align: right;
+        }
+
+        .nav-menu a {
+            color: #333;
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-menu a:hover {
+            color: #0066cc;
+        }
+
+        .nav-menu a:focus-visible {
+            outline: 2px solid #0066cc;
+            outline-offset: 2px;
+        }
+
+        .pure-button {
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .pure-button-primary {
+            background: #0066cc;
+            color: white;
+            border: none;
+        }
+
+        .pure-button-primary:hover {
+            background: #0052a3;
+        }
+
+        .button-large {
+            font-size: 1.2rem;
+            padding: 0.8rem 2rem;
+        }
+
+        .hero {
+            padding: 4rem 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecf0 100%);
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: #000;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #333;
+            margin-bottom: 2rem;
+        }
+
+        .search-form {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+        }
+
+        .search-form input,
+        .search-form select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .search-form input:focus,
+        .search-form select:focus {
+            outline: 2px solid #0066cc;
+            outline-offset: 2px;
+            border-color: transparent;
+        }
+
+        .search-form label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            border: 0;
+        }
+
+        .filter-buttons {
+            margin: 2rem 0 1rem;
+        }
+
+        .filter-btn {
+            background: white;
+            border: 1px solid #ddd;
+            color: #333;
+            padding: 0.8rem 1.5rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 40px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-height: 48px; 
+            min-width: 48px;
+        }
+
+        .filter-btn:hover,
+        .filter-btn:focus {
+            background: #0066cc;
+            color: white;
+            border-color: #0066cc;
+            outline: none;
+        }
+
+        .filter-btn:focus-visible {
+            outline: 2px solid #0066cc;
+            outline-offset: 2px;
+        }
+
+        
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #000;
+            text-align: center;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 2rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            text-align: center;
+            height: 100%;
+            transition: transform 0.2s;
+            border: 1px solid #f0f0f0;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .benefit-icon {
+            font-size: 2.5rem;
+            color: #0066cc;
+            margin-bottom: 1rem;
+        }
+
+        .benefit-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: #000;
+        }
+
+        .benefit-card p {
+            color: #333;
+        }
+
+        
+        .how-it-works {
+            background: #f9f9f9;
+            padding: 4rem 0;
+        }
+
+        .step {
+            text-align: center;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: #0066cc;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .step h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #000;
+        }
+
+        
+        .footer {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 3rem 0;
+        }
+
+        .footer a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer a:hover {
+            color: #fff;
+        }
+
+        .footer a:focus-visible {
+            outline: 2px solid #fff;
+            outline-offset: 2px;
+        }
+
+        .social-links {
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            display: inline-block;
+            margin-right: 1rem;
+            font-size: 1.5rem;
+            min-width: 48px;
+            min-height: 48px;
+            text-align: center;
+            line-height: 48px;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .nav-menu {
+                text-align: center;
+                margin-top: 1rem;
+            }
+            
+            .nav-menu a {
+                margin: 0 0.75rem;
+            }
+            
+            .filter-btn {
+                width: 100%;
+                margin-right: 0;
+            }
+        }
+
+        /* Для слабовидящих - разрешаем масштабирование */
+        /* meta viewport уже настроен без maximum-scale */
+    </style>
+</head>
+<body>
+    
+    <header class="header">
+        <div class="pure-g">
+            <div class="pure-u-1 pure-u-md-1-3">
+                <a href="/" class="logo" aria-label="TripWise на главную">
+                    <i class="fas fa-compass" aria-hidden="true"></i> TripWise
+                </a>
+            </div>
+            <div class="pure-u-1 pure-u-md-2-3 nav-menu">
+                <nav aria-label="Основная навигация">
+                    <a href="#about" aria-current="page">О нас</a>
+                    <a href="#how">Как работает</a>
+                    <a href="#contacts">Контакты</a>
+                    <a href="#" aria-label="Личный кабинет">
+                        <i class="fas fa-user" aria-hidden="true"></i> Войти
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="pure-g">
+                <div class="pure-u-1 pure-u-md-2-3">
+                    <h1 id="hero-title" class="hero-title">Найдите идеальное путешествие</h1>
+                    <p class="hero-subtitle">Поиск авиабилетов, ЖД билетов и автобусов в одном окне. Быстро, доступно, честно.</p>
+                    
+                    
+                    <div class="search-form" role="search">
+                        <form action="#" method="get">
+                            <div class="pure-g" style="gap: 1rem 0;">
+                                <div class="pure-u-1 pure-u-md-1-3">
+                                    <label for="from" class="sr-only">Откуда</label>
+                                    <input type="text" id="from" placeholder="Откуда" aria-label="Город вылета" value="Москва">
+                                </div>
+                                <div class="pure-u-1 pure-u-md-1-3">
+                                    <label for="to" class="sr-only">Куда</label>
+                                    <input type="text" id="to" placeholder="Куда" aria-label="Город прибытия" value="Сочи">
+                                </div>
+                                <div class="pure-u-1 pure-u-md-1-3">
+                                    <label for="date" class="sr-only">Дата</label>
+                                    <input type="date" id="date" aria-label="Дата вылета" value="2026-06-15">
+                                </div>
+                            </div>
+                            
+                            
+                            <div class="pure-g" style="margin-top: 1rem;">
+                                <div class="pure-u-1">
+                                    <fieldset>
+                                        <legend class="sr-only">Вид транспорта</legend>
+                                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                            <label class="pure-radio">
+                                                <input type="radio" name="transport" value="avia" checked> ✈️ Авиа
+                                            </label>
+                                            <label class="pure-radio">
+                                                <input type="radio" name="transport" value="train"> 🚂 ЖД
+                                            </label>
+                                            <label class="pure-radio">
+                                                <input type="radio" name="transport" value="bus"> 🚌 Автобусы
+                                            </label>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="pure-button pure-button-primary button-large" style="width: 100%; margin-top: 1.5rem;" aria-label="Найти билеты">
+                                <i class="fas fa-search" aria-hidden="true"></i> Найти билеты
+                            </button>
+                        </form>
+                    </div>
+                    
+                    
+                    <div class="filter-buttons">
+                        <button class="filter-btn" aria-label="Самые дешевые билеты">
+                            <i class="fas fa-tag" aria-hidden="true"></i> Самый дешевый
+                        </button>
+                        <button class="filter-btn" aria-label="Самые быстрые рейсы">
+                            <i class="fas fa-clock" aria-hidden="true"></i> Самый быстрый
+                        </button>
+                        <button class="filter-btn" aria-label="Без пересадок">
+                            <i class="fas fa-plane" aria-hidden="true"></i> Без пересадок
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="pure-u-1 pure-u-md-1-3" style="display: flex; align-items: center; justify-content: center;">
+                    <!-- Изображение с width/height для CLS -->
+                    <img src="https://i.pinimg.com/originals/00/4f/7a/004f7ae20553beab56bbbad009ec1a48.jpg" 
+                         alt="Путешествия" 
+                         width="400" 
+                         height="300"
+                         style="max-width: 100%; height: auto; border-radius: 8px;">
+                </div>
+            </div>
+        </section>
+
+        <!-- ПРЕИМУЩЕСТВА (Уровень 2) -->
+        <section class="pure-g" style="padding: 4rem 0;" aria-labelledby="benefits-title">
+            <div class="pure-u-1">
+                <h2 id="benefits-title" class="section-title">Почему выбирают TripWise</h2>
+            </div>
+            
+            <!-- Сетка карточек (3 колонки на десктопе) -->
+            <div class="pure-u-1 pure-u-md-1-3">
+                <div class="benefit-card">
+                    <div class="benefit-icon" aria-hidden="true">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3>Молниеносная скорость</h3>
+                    <p>Меньше 1000 элементов на странице — никаких тормозов. Поиск за секунды.</p>
+                </div>
+            </div>
+            
+            <div class="pure-u-1 pure-u-md-1-3">
+                <div class="benefit-card">
+                    <div class="benefit-icon" aria-hidden="true">
+                        <i class="fas fa-universal-access"></i>
+                    </div>
+                    <h3>Доступно каждому</h3>
+                    <p>Высокий контраст, поддержка скринридеров и крупные кнопки для всех.</p>
+                </div>
+            </div>
+            
+            <div class="pure-u-1 pure-u-md-1-3">
+                <div class="benefit-card">
+                    <div class="benefit-icon" aria-hidden="true">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <h3>Честная экономия</h3>
+                    <p>Сравниваем авиа, ЖД и автобусы — выбирайте самый выгодный вариант.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- КАК РАБОТАЕТ (Уровень 2) -->
+        <section class="how-it-works" aria-labelledby="how-title">
+            <div class="pure-g">
+                <div class="pure-u-1">
+                    <h2 id="how-title" class="section-title">Как это работает</h2>
+                </div>
+            </div>
+            
+            <div class="pure-g">
+                <div class="pure-u-1 pure-u-md-1-4">
+                    <div class="step">
+                        <div class="step-number" aria-hidden="true">1</div>
+                        <h3>Поиск</h3>
+                        <p>Введите маршрут и дату</p>
+                    </div>
+                </div>
+                
+                <div class="pure-u-1 pure-u-md-1-4">
+                    <div class="step">
+                        <div class="step-number" aria-hidden="true">2</div>
+                        <h3>Сравнение</h3>
+                        <p>Выберите лучший вариант</p>
+                    </div>
+                </div>
+                
+                <div class="pure-u-1 pure-u-md-1-4">
+                    <div class="step">
+                        <div class="step-number" aria-hidden="true">3</div>
+                        <h3>Бронирование</h3>
+                        <p>Заполните данные пассажиров</p>
+                    </div>
+                </div>
+                
+                <div class="pure-u-1 pure-u-md-1-4">
+                    <div class="step">
+                        <div class="step-number" aria-hidden="true">4</div>
+                        <h3>Оплата</h3>
+                        <p>Безопасный платеж</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Блок автозаполнения (UX-фишка) -->
+            <div class="pure-g" style="margin-top: 3rem;">
+                <div class="pure-u-1" style="text-align: center;">
+                    <div style="background: white; padding: 1.5rem; border-radius: 8px; display: inline-block;">
+                        <p><strong>👋 Иван, ваш последний поиск:</strong> Москва → Сочи, 15 июня</p>
+                        <button class="pure-button pure-button-primary" style="margin-top: 0.5rem;">
+                            <i class="fas fa-user-check" aria-hidden="true"></i> Заполнить из профиля
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Пример результатов поиска (для демонстрации) -->
+        <section style="padding: 4rem 0;" aria-labelledby="results-title">
+            <h2 id="results-title" class="section-title">Популярные направления</h2>
+            
+            <div class="pure-g" style="gap: 1rem 0;">
+                <!-- Карточка билета 1 -->
+                <div class="pure-u-1 pure-u-md-1-2">
+                    <div style="border: 1px solid #eee; padding: 1.5rem; border-radius: 8px; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                        <div style="width: 48px; height: 48px; background: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-plane" aria-hidden="true"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <h3 style="margin: 0;">✈️ S7 Airlines</h3>
+                            <p style="margin: 0; color: #333;">Москва → Сочи · 10:00 → 12:30</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 1.5rem; font-weight: bold; color: #000;">5 990 ₽</div>
+                            <button class="pure-button pure-button-primary" style="margin-top: 0.5rem;">Выбрать</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Карточка билета 2 -->
+                <div class="pure-u-1 pure-u-md-1-2">
+                    <div style="border: 1px solid #eee; padding: 1.5rem; border-radius: 8px; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                        <div style="width: 48px; height: 48px; background: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-train" aria-hidden="true"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <h3 style="margin: 0;">🚂 РЖД</h3>
+                            <p style="margin: 0; color: #333;">Москва → Сочи · 23:00 → 10:30</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 1.5rem; font-weight: bold; color: #000;">3 200 ₽</div>
+                            <button class="pure-button pure-button-primary" style="margin-top: 0.5rem;">Выбрать</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Пагинация -->
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="pure-button" style="margin: 0 0.25rem; min-width: 48px;">◀</button>
+                <button class="pure-button pure-button-primary" style="margin: 0 0.25rem; min-width: 48px;">1</button>
+                <button class="pure-button" style="margin: 0 0.25rem; min-width: 48px;">2</button>
+                <button class="pure-button" style="margin: 0 0.25rem; min-width: 48px;">3</button>
+                <button class="pure-button" style="margin: 0 0.25rem; min-width: 48px;">▶</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- ФУТЕР (Уровень 2) -->
+    <footer class="footer" id="contacts">
+        <div class="pure-g">
+            <div class="pure-u-1 pure-u-md-1-3">
+                <h3 style="color: white;">TripWise</h3>
+                <p style="color: #ccc;">Умный поиск путешествий</p>
+                <p style="color: #ccc;">© 2026 Все права защищены</p>
+            </div>
+            
+            <div class="pure-u-1 pure-u-md-1-3">
+                <h4 style="color: white;">Контакты</h4>
+                <address style="color: #ccc; font-style: normal;">
+                    <p><i class="fas fa-envelope" aria-hidden="true"></i> support@tripwise.ru</p>
+                    <p><i class="fas fa-phone" aria-hidden="true"></i> +7 (495) 123-45-67</p>
+                    <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Москва, ул. Арбат, 10</p>
+                </address>
+            </div>
+            
+            <div class="pure-u-1 pure-u-md-1-3">
+                <h4 style="color: white;">Мы в соцсетях</h4>
+                <div class="social-links">
+                    <a href="#" aria-label="Telegram">
+                        <i class="fab fa-telegram" aria-hidden="true"></i>
+                    </a>
+                    <a href="#" aria-label="VK">
+                        <i class="fab fa-vk" aria-hidden="true"></i>
+                    </a>
+                    <a href="#" aria-label="YouTube">
+                        <i class="fab fa-youtube" aria-hidden="true"></i>
+                    </a>
+                </div>
+                
+                <h4 style="color: white; margin-top: 1rem;">Юридическая информация</h4>
+                <p><a href="#" style="color: #ccc;">Политика конфиденциальности</a></p>
+                <p><a href="#" style="color: #ccc;">Пользовательское соглашение</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Модальное окно 404 (скрыто, для демонстрации) -->
+    <div hidden aria-hidden="true">
+        <!-- Это просто заглушка для 404 страницы -->
+    </div>
+</body>
+</html>
