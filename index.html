@@ -49,25 +49,42 @@
         }
 
         .nav-menu {
-            text-align: right;
-        }
+    text-align: right;
+}
 
-        .nav-menu a {
-            color: #333;
-            text-decoration: none;
-            margin-left: 1.5rem;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
+.nav-menu .nav-link {
+    color: #333;
+    text-decoration: none;
+    margin-left: 1.5rem;
+    font-weight: 500;
+    transition: color 0.2s;
+    position: relative;
+}
 
-        .nav-menu a:hover {
-            color: #0066cc;
-        }
+.nav-menu .nav-link:hover {
+    color: #0066cc;
+}
 
-        .nav-menu a:focus-visible {
-            outline: 2px solid #0066cc;
-            outline-offset: 2px;
-        }
+.nav-menu .nav-link:focus-visible {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
+}
+
+/* Активная ссылка */
+.nav-menu .nav-link.active {
+    color: #0066cc;
+    font-weight: 600;
+}
+
+.nav-menu .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #0066cc;
+}
 
         .pure-button {
             border-radius: 4px;
@@ -256,41 +273,126 @@
         }
 
         
-        .footer {
-            background: #1a1a1a;
-            color: #fff;
-            padding: 3rem 0;
-        }
+        /* ФУТЕР (единый) */
+.footer {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 3rem 0;
+    margin-top: 4rem;
+    width: 100%;
+    clear: both;
+}
 
-        .footer a {
-            color: #ccc;
-            text-decoration: none;
-            transition: color 0.2s;
-        }
+.footer .pure-g {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
 
-        .footer a:hover {
-            color: #fff;
-        }
+.footer-section {
+    padding: 0 1rem;
+}
 
-        .footer a:focus-visible {
-            outline: 2px solid #fff;
-            outline-offset: 2px;
-        }
+.footer h3 {
+    color: white;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
 
-        .social-links {
-            margin-top: 1rem;
-        }
+.footer h4 {
+    color: white;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
 
-        .social-links a {
-            display: inline-block;
-            margin-right: 1rem;
-            font-size: 1.5rem;
-            min-width: 48px;
-            min-height: 48px;
-            text-align: center;
-            line-height: 48px;
-        }
+.footer p {
+    color: #ccc;
+    margin-bottom: 0.5rem;
+}
 
+.footer a {
+    color: #ccc;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer a:hover {
+    color: #fff;
+}
+
+.footer a:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+.footer address p {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.footer address i {
+    color: #0066cc;
+    width: 20px;
+}
+
+/* ===== ЕДИНЫЕ СОЦСЕТИ ===== */
+.social-links {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.social-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px !important;      /* Фиксированная ширина */
+    height: 48px !important;     /* Фиксированная высота */
+    min-width: 48px !important;  /* Минимальная ширина */
+    min-height: 48px !important; /* Минимальная высота */
+    font-size: 1.5rem !important; /* Размер иконки */
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    transition: all 0.2s;
+    color: #ccc;
+    text-decoration: none;
+    margin-right: 0; /* Убираем лишние отступы */
+}
+
+.social-links a:hover {
+    background: #0066cc;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.social-links a:focus-visible {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
+}
+
+/* Для темного фона в футере */
+.footer .social-links a {
+    background: rgba(255,255,255,0.1);
+    color: #ccc;
+}
+
+.footer .social-links a:hover {
+    background: #0066cc;
+    color: white;
+}
+
+/* Для светлого фона (например, на странице контактов) */
+.contact-info .social-links a {
+    background: #eaeaea;
+    color: #333;
+}
+
+.contact-info .social-links a:hover {
+    background: #0066cc;
+    color: white;
+}
         /* Адаптивность */
         @media (max-width: 768px) {
             .hero-title {
@@ -298,13 +400,19 @@
             }
             
             .nav-menu {
-                text-align: center;
-                margin-top: 1rem;
-            }
-            
-            .nav-menu a {
-                margin: 0 0.75rem;
-            }
+        text-align: center;
+        margin-top: 1rem;
+    }
+    
+    .nav-menu .nav-link {
+        margin: 0 0.75rem;
+        display: inline-block;
+        padding: 0.5rem 0;
+    }
+    
+    .nav-menu .nav-link.active::after {
+        bottom: 0;
+    }
             
             .filter-btn {
                 width: 100%;
@@ -319,24 +427,26 @@
 <body>
     
     <header class="header">
-        <div class="pure-g">
-            <div class="pure-u-1 pure-u-md-1-3">
-                <a href="/" class="logo" aria-label="TripWise на главную">
-                    <i class="fas fa-compass" aria-hidden="true"></i> TripWise
-                </a>
-            </div>
-            <div class="pure-u-1 pure-u-md-2-3 nav-menu">
-                <nav aria-label="Основная навигация">
-                    <a href="#about" aria-current="page">О нас</a>
-                    <a href="#how">Как работает</a>
-                    <a href="#contacts">Контакты</a>
-                    <a href="#" aria-label="Личный кабинет">
-                        <i class="fas fa-user" aria-hidden="true"></i> Войти
-                    </a>
-                </nav>
-            </div>
+    <div class="pure-g">
+        <div class="pure-u-1 pure-u-md-1-3">
+            <a href="index.html" class="logo" aria-label="TripWise на главную">
+                <i class="fas fa-compass" aria-hidden="true"></i> TripWise
+            </a>
         </div>
-    </header>
+        <div class="pure-u-1 pure-u-md-2-3 nav-menu">
+            <nav aria-label="Основная навигация">
+                <a href="index.html" class="nav-link">Главная</a>
+                <a href="index.html#about" class="nav-link">О нас</a>
+                <a href="index.html#how" class="nav-link">Как работает</a>
+                <a href="faq.html" class="nav-link">FAQ</a>
+                <a href="contacts.html" class="nav-link">Контакты</a>
+                <a href="404.html" class="nav-link" aria-label="Личный кабинет (тестовая страница)">
+                    <i class="fas fa-user" aria-hidden="true"></i> Войти
+                </a>
+            </nav>
+        </div>
+    </div>
+</header>
 
     <main>
         
@@ -416,7 +526,7 @@
         </section>
 
         <!-- ПРЕИМУЩЕСТВА (Уровень 2) -->
-        <section class="pure-g" style="padding: 4rem 0;" aria-labelledby="benefits-title">
+       <section id="about" class="pure-g" style="padding: 4rem 0;" aria-labelledby="benefits-title">
             <div class="pure-u-1">
                 <h2 id="benefits-title" class="section-title">Почему выбирают TripWise</h2>
             </div>
@@ -454,7 +564,7 @@
         </section>
 
         <!-- КАК РАБОТАЕТ (Уровень 2) -->
-        <section class="how-it-works" aria-labelledby="how-title">
+        <section id="how" class="how-it-works" aria-labelledby="how-title">
             <div class="pure-g">
                 <div class="pure-u-1">
                     <h2 id="how-title" class="section-title">Как это работает</h2>
@@ -560,43 +670,49 @@
     </main>
 
     <!-- ФУТЕР (Уровень 2) -->
-    <footer class="footer" id="contacts">
-        <div class="pure-g">
-            <div class="pure-u-1 pure-u-md-1-3">
-                <h3 style="color: white;">TripWise</h3>
-                <p style="color: #ccc;">Умный поиск путешествий</p>
-                <p style="color: #ccc;">© 2026 Все права защищены</p>
+    <!-- ФУТЕР (единый для всех страниц) -->
+<!-- ФУТЕР (единый для всех страниц) -->
+<!-- ФУТЕР (единый для всех страниц) -->
+<footer class="footer">
+    <div class="pure-g">
+        <!-- Колонка 1: О проекте -->
+        <div class="pure-u-1 pure-u-md-1-3">
+            <div class="footer-section">
+                <h3>TripWise</h3>
+                <p>Умный поиск путешествий</p>
+                <p>© 2026 Все права защищены</p>
             </div>
-            
-            <div class="pure-u-1 pure-u-md-1-3">
-                <h4 style="color: white;">Контакты</h4>
-                <address style="color: #ccc; font-style: normal;">
+        </div>
+        
+        <!-- Колонка 2: Контакты -->
+        <div class="pure-u-1 pure-u-md-1-3">
+            <div class="footer-section">
+                <h4>Контакты</h4>
+                <address style="font-style: normal;">
                     <p><i class="fas fa-envelope" aria-hidden="true"></i> support@tripwise.ru</p>
                     <p><i class="fas fa-phone" aria-hidden="true"></i> +7 (495) 123-45-67</p>
                     <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Москва, ул. Арбат, 10</p>
                 </address>
             </div>
-            
-            <div class="pure-u-1 pure-u-md-1-3">
-                <h4 style="color: white;">Мы в соцсетях</h4>
+        </div>
+        
+        <!-- Колонка 3: Соцсети и ссылки -->
+        <div class="pure-u-1 pure-u-md-1-3">
+            <div class="footer-section">
+                <h4>Мы в соцсетях</h4>
                 <div class="social-links">
-                    <a href="#" aria-label="Telegram">
-                        <i class="fab fa-telegram" aria-hidden="true"></i>
-                    </a>
-                    <a href="#" aria-label="VK">
-                        <i class="fab fa-vk" aria-hidden="true"></i>
-                    </a>
-                    <a href="#" aria-label="YouTube">
-                        <i class="fab fa-youtube" aria-hidden="true"></i>
-                    </a>
+                    <a href="404.html" aria-label="Telegram (тестовая страница)"><i class="fab fa-telegram"></i></a>
+                    <a href="404.html" aria-label="VK (тестовая страница)"><i class="fab fa-vk"></i></a>
+                    <a href="404.html" aria-label="YouTube (тестовая страница)"><i class="fab fa-youtube"></i></a>
                 </div>
                 
-                <h4 style="color: white; margin-top: 1rem;">Юридическая информация</h4>
-                <p><a href="#" style="color: #ccc;">Политика конфиденциальности</a></p>
-                <p><a href="#" style="color: #ccc;">Пользовательское соглашение</a></p>
+                <h4 style="margin-top: 1.5rem;">Информация</h4>
+                <p><a href="404.html">Политика конфиденциальности</a></p>
+                <p><a href="404.html">Пользовательское соглашение</a></p>
             </div>
         </div>
-    </footer>
+    </div>
+</footer>
 
     <!-- Модальное окно 404 (скрыто, для демонстрации) -->
     <div hidden>
