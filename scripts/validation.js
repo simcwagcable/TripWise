@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.dispatchEvent(event);
 
             // Показываем сообщение об успехе
-            showSuccessMessage('Спасибо! Ваше сообщение отправлено.');
+            showSuccessMessage('Ваше сообщение отправлено. Спасибо!');
 
             // Очищаем форму
             form.reset();
