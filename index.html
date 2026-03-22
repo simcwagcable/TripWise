@@ -5,718 +5,444 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TripWise | Умный поиск путешествий</title>
     
-    
+    <!-- Pure.css -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/grids-responsive-min.css">
-    <link rel="icon" href="https://img.icons8.com/ios-filled/512/globe.png" type="image/png">
-    <!-- Font Awesome для иконок -->
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     
-    <!-- Дополнительные стили для кастомизации -->
+    <!-- Vue 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    
+    <link rel="icon" href="https://img.icons8.com/ios-filled/512/globe.png" type="image/png">
+    
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #222; background: #fff; }
+        
+        .header { background: #fff; border-bottom: 1px solid #eaeaea; padding: 1rem 0; position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 1.5rem; font-weight: 700; color: #0066cc; text-decoration: none; padding-left: 1rem; display: inline-block; }
+        .nav-menu { text-align: right; padding-right: 1rem; }
+        .nav-menu .nav-link { color: #333; text-decoration: none; margin-left: 1.5rem; font-weight: 500; transition: color 0.2s; }
+        .nav-menu .nav-link:hover { color: #0066cc; }
+        .pure-button-primary { background: #0066cc; color: white; border: none; }
+        .pure-button-primary:hover { background: #0052a3; }
+        .button-large { font-size: 1.2rem; padding: 0.8rem 2rem; }
+        
+        .hero { padding: 4rem 0; background: linear-gradient(135deg, #f5f7fa 0%, #e9ecf0 100%); }
+        .hero-title { font-size: 3rem; font-weight: 800; line-height: 1.2; margin-bottom: 1rem; color: #000; }
+        .hero-subtitle { font-size: 1.25rem; color: #333; margin-bottom: 2rem; }
+        .search-form { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 2rem; }
+        .search-form input, .search-form select { width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; }
+        .search-form input:focus, .search-form select:focus { outline: 2px solid #0066cc; outline-offset: 2px; }
+        
+        /* Отступ для левой колонки, чтобы форма не прилипала к картинке */
+        .hero-left-col {
+            padding-right: 2rem;
         }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            line-height: 1.6;
-            color: #222;
-            background: #fff;
+        
+        .section-title { font-size: 2rem; font-weight: 700; margin-bottom: 2rem; color: #000; text-align: center; }
+        .benefit-card { background: white; padding: 2rem 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: center; height: 100%; transition: transform 0.2s; border: 1px solid #f0f0f0; }
+        .benefit-card:hover { transform: translateY(-4px); }
+        .benefit-icon { font-size: 2.5rem; color: #0066cc; margin-bottom: 1rem; }
+        .benefit-card h3 { font-size: 1.3rem; margin-bottom: 0.8rem; color: #000; }
+        .how-it-works { background: #f9f9f9; padding: 4rem 0; }
+        .step { text-align: center; padding: 1.5rem; }
+        .step-number { width: 48px; height: 48px; background: #0066cc; color: white; font-size: 1.5rem; font-weight: bold; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+        
+        /* ===== ФИКСИРОВАННЫЙ РАЗМЕР КАРТОЧЕК ===== */
+        .trips-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
         }
-
-        .text-contrast {
-            color: #000;
-            font-weight: 600;
+        
+        .trip-card-wrapper {
+            display: flex;
         }
-
-        .header {
-            background: #fff;
-            border-bottom: 1px solid #eaeaea;
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #0066cc;
-            text-decoration: none;
-        }
-
-        .nav-menu {
-    text-align: right;
-}
-
-.nav-menu .nav-link {
-    color: #333;
-    text-decoration: none;
-    margin-left: 1.5rem;
-    font-weight: 500;
-    transition: color 0.2s;
-    position: relative;
-}
-
-.nav-menu .nav-link:hover {
-    color: #0066cc;
-}
-
-.nav-menu .nav-link:focus-visible {
-    outline: 2px solid #0066cc;
-    outline-offset: 2px;
-}
-
-/* Активная ссылка */
-.nav-menu .nav-link.active {
-    color: #0066cc;
-    font-weight: 600;
-}
-
-.nav-menu .nav-link.active::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: #0066cc;
-}
-
-        .pure-button {
-            border-radius: 4px;
-            font-weight: 500;
-        }
-
-        .pure-button-primary {
-            background: #0066cc;
-            color: white;
-            border: none;
-        }
-
-        .pure-button-primary:hover {
-            background: #0052a3;
-        }
-
-        .button-large {
-            font-size: 1.2rem;
-            padding: 0.8rem 2rem;
-        }
-
-        .hero {
-            padding: 4rem 0;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecf0 100%);
-        }
-
-        .hero-title {
-            font-size: 3rem;
-            font-weight: 800;
-            line-height: 1.2;
-            margin-bottom: 1rem;
-            color: #000;
-        }
-
-        .hero-subtitle {
-            font-size: 1.25rem;
-            color: #333;
-            margin-bottom: 2rem;
-        }
-
-        .search-form {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            margin-top: 2rem;
-        }
-
-        .search-form input,
-        .search-form select {
+        
+        .trip-card { 
+            border: 1px solid #eee; 
+            border-radius: 12px; 
+            background: white; 
+            transition: all 0.3s;
             width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 1rem;
+            display: flex;
+            flex-direction: column;
+            padding: 1.25rem;
+            gap: 1rem;
         }
-
-        .search-form input:focus,
-        .search-form select:focus {
-            outline: 2px solid #0066cc;
-            outline-offset: 2px;
-            border-color: transparent;
-        }
-
-        .search-form label {
-            display: block;
-            margin-bottom: 0.3rem;
-            font-weight: 500;
-            color: #333;
-        }
-
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0,0,0,0);
-            border: 0;
-        }
-
-        .filter-buttons {
-            margin: 2rem 0 1rem;
-        }
-
-        .filter-btn {
-            background: white;
-            border: 1px solid #ddd;
-            color: #333;
-            padding: 0.8rem 1.5rem;
-            margin-right: 0.5rem;
-            margin-bottom: 0.5rem;
-            border-radius: 40px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            min-height: 48px; 
-            min-width: 48px;
-        }
-
-        .filter-btn:hover,
-        .filter-btn:focus {
-            background: #0066cc;
-            color: white;
-            border-color: #0066cc;
-            outline: none;
-        }
-
-        .filter-btn:focus-visible {
-            outline: 2px solid #0066cc;
-            outline-offset: 2px;
-        }
-
         
-        .section-title {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-            color: #000;
-            text-align: center;
+        .trip-card.favorite { 
+            border-left: 4px solid #ffc107; 
+            background: #fff9e6; 
         }
-
-        .benefit-card {
-            background: white;
-            padding: 2rem 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            text-align: center;
-            height: 100%;
-            transition: transform 0.2s;
-            border: 1px solid #f0f0f0;
-        }
-
-        .benefit-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-        }
-
-        .benefit-icon {
-            font-size: 2.5rem;
-            color: #0066cc;
-            margin-bottom: 1rem;
-        }
-
-        .benefit-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.8rem;
-            color: #000;
-        }
-
-        .benefit-card p {
-            color: #333;
-        }
-
         
-        .how-it-works {
-            background: #f9f9f9;
-            padding: 4rem 0;
+        /* Верхняя часть карточки - иконка и информация */
+        .trip-card-top {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
         }
-
-        .step {
-            text-align: center;
-            padding: 1.5rem;
-            position: relative;
+        
+        .trip-icon { 
+            width: 52px; 
+            height: 52px; 
+            background: #f0f0f0; 
+            border-radius: 12px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1.5rem; 
+            color: #0066cc; 
+            flex-shrink: 0;
         }
-
-        .step-number {
-            width: 48px;
-            height: 48px;
-            background: #0066cc;
-            color: white;
-            font-size: 1.5rem;
-            font-weight: bold;
-            border-radius: 50%;
+        
+        .trip-info { 
+            flex: 1; 
+            min-width: 0;
+        }
+        
+        .trip-info h3 { 
+            margin: 0 0 6px 0; 
+            font-size: 1.1rem; 
+            font-weight: 600;
+            color: #222;
+        }
+        
+        .trip-info p { 
+            margin: 0; 
+            color: #666; 
+            font-size: 0.85rem; 
+        }
+        
+        /* Нижняя часть карточки - цена и кнопки */
+        .trip-card-bottom {
             display: flex;
             align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
+            justify-content: space-between;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 1rem;
+            margin-top: auto;
         }
-
-        .step h3 {
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-            color: #000;
-        }
-
         
-        /* ФУТЕР (единый) */
-.footer {
-    background: #1a1a1a;
-    color: #fff;
-    padding: 3rem 0;
-    margin-top: 4rem;
-    width: 100%;
-    clear: both;
-}
-
-.footer .pure-g {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-}
-
-.footer-section {
-    padding: 0 1rem;
-}
-
-.footer h3 {
-    color: white;
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-}
-
-.footer h4 {
-    color: white;
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-}
-
-.footer p {
-    color: #ccc;
-    margin-bottom: 0.5rem;
-}
-
-.footer a {
-    color: #ccc;
-    text-decoration: none;
-    transition: color 0.2s;
-}
-
-.footer a:hover {
-    color: #fff;
-}
-
-.footer a:focus-visible {
-    outline: 2px solid #fff;
-    outline-offset: 2px;
-}
-
-.footer address p {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.footer address i {
-    color: #0066cc;
-    width: 20px;
-}
-
-/* ===== ЕДИНЫЕ СОЦСЕТИ ===== */
-.social-links {
-    margin-top: 1rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-.social-links a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px !important;      /* Фиксированная ширина */
-    height: 48px !important;     /* Фиксированная высота */
-    min-width: 48px !important;  /* Минимальная ширина */
-    min-height: 48px !important; /* Минимальная высота */
-    font-size: 1.5rem !important; /* Размер иконки */
-    background: rgba(255,255,255,0.1);
-    border-radius: 50%;
-    transition: all 0.2s;
-    color: #ccc;
-    text-decoration: none;
-    margin-right: 0; /* Убираем лишние отступы */
-}
-
-.social-links a:hover {
-    background: #0066cc;
-    color: white;
-    transform: translateY(-2px);
-}
-
-.social-links a:focus-visible {
-    outline: 2px solid #0066cc;
-    outline-offset: 2px;
-}
-
-/* Для темного фона в футере */
-.footer .social-links a {
-    background: rgba(255,255,255,0.1);
-    color: #ccc;
-}
-
-.footer .social-links a:hover {
-    background: #0066cc;
-    color: white;
-}
-
-/* Для светлого фона (например, на странице контактов) */
-.contact-info .social-links a {
-    background: #eaeaea;
-    color: #333;
-}
-
-.contact-info .social-links a:hover {
-    background: #0066cc;
-    color: white;
-}
-        /* Адаптивность */
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2rem;
-            }
-            
-            .nav-menu {
-        text-align: center;
-        margin-top: 1rem;
-    }
-    
-    .nav-menu .nav-link {
-        margin: 0 0.75rem;
-        display: inline-block;
-        padding: 0.5rem 0;
-    }
-    
-    .nav-menu .nav-link.active::after {
-        bottom: 0;
-    }
-            
-            .filter-btn {
-                width: 100%;
-                margin-right: 0;
-            }
+        .trip-price { 
+            font-size: 1.4rem; 
+            font-weight: 700; 
+            color: #0066cc;
         }
-
-        /* Для слабовидящих - разрешаем масштабирование */
-        /* meta viewport уже настроен без maximum-scale */
+        
+        .trip-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .favorite-btn { 
+            background: none; 
+            border: none; 
+            font-size: 1.4rem; 
+            cursor: pointer; 
+            padding: 0.5rem;
+            transition: transform 0.2s;
+            color: #ffc107;
+        }
+        
+        .favorite-btn:hover { 
+            transform: scale(1.1); 
+        }
+        
+        .select-btn { 
+            background: #0066cc; 
+            color: white; 
+            padding: 0.5rem 1.2rem; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        
+        .select-btn:hover { 
+            background: #0052a3; 
+        }
+        
+        .filters-panel { background: #f9f9f9; padding: 1.5rem; border-radius: 8px; margin: 1rem 0 2rem 0; }
+        .filter-group { margin-bottom: 1rem; }
+        .filter-group label { display: block; font-weight: 500; margin-bottom: 0.5rem; color: #333; }
+        .filter-btn { padding: 0.5rem 1rem; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer; margin-right: 0.5rem; margin-bottom: 0.5rem; transition: all 0.2s; }
+        .filter-btn.active { background: #0066cc; color: white; border-color: #0066cc; }
+        .stats { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e0e0e0; text-align: right; color: #666; font-size: 0.9rem; }
+        .empty-state { text-align: center; padding: 3rem; color: #999; font-size: 1.2rem; }
+        
+        .footer { background: #1a1a1a; color: #fff; padding: 3rem 0; margin-top: 4rem; }
+        .footer .pure-g { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+        .footer-section { padding: 0 1rem; }
+        .footer h3, .footer h4 { color: white; margin-bottom: 1rem; }
+        .footer p { color: #ccc; }
+        .social-links a { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; background: rgba(255,255,255,0.1); border-radius: 50%; font-size: 1.5rem; color: #ccc; margin-right: 0.5rem; text-decoration: none; }
+        .social-links a:hover { background: #0066cc; color: white; }
+        
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2rem; }
+            .hero-left-col { padding-right: 0; }
+            .nav-menu { text-align: center; margin-top: 1rem; }
+            .nav-menu .nav-link { margin: 0 0.75rem; }
+            .trips-grid { grid-template-columns: 1fr; }
+            .trip-card { flex-direction: column; }
+            .trip-card-top { width: 100%; }
+            .trip-card-bottom { width: 100%; }
+        }
+        
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .trips-grid { grid-template-columns: repeat(2, 1fr); }
+        }
     </style>
 </head>
 <body>
-    
     <header class="header">
-    <div class="pure-g">
-        <div class="pure-u-1 pure-u-md-1-3">
-            <a href="index.html" class="logo" aria-label="TripWise на главную">
-                <i class="fas fa-compass" aria-hidden="true"></i> TripWise
-            </a>
+        <div class="pure-g">
+            <div class="pure-u-1 pure-u-md-1-3">
+                <a href="index.html" class="logo"><i class="fas fa-compass"></i> TripWise</a>
+            </div>
+            <div class="pure-u-1 pure-u-md-2-3 nav-menu">
+                <nav>
+                    <a href="index.html" class="nav-link">Главная</a>
+                    <a href="#about" class="nav-link">О нас</a>
+                    <a href="#how" class="nav-link">Как работает</a>
+                    <a href="faq.html" class="nav-link">FAQ</a>
+                    <a href="contacts.html" class="nav-link">Контакты</a>
+                    <a href="404.html" class="nav-link"><i class="fas fa-user"></i> Войти</a>
+                </nav>
+            </div>
         </div>
-        <div class="pure-u-1 pure-u-md-2-3 nav-menu">
-            <nav aria-label="Основная навигация">
-                <a href="index.html" class="nav-link">Главная</a>
-                <a href="index.html#about" class="nav-link">О нас</a>
-                <a href="index.html#how" class="nav-link">Как работает</a>
-                <a href="faq.html" class="nav-link">FAQ</a>
-                <a href="contacts.html" class="nav-link">Контакты</a>
-                <a href="404.html" class="nav-link" aria-label="Личный кабинет (тестовая страница)">
-                    <i class="fas fa-user" aria-hidden="true"></i> Войти
-                </a>
-            </nav>
-        </div>
-    </div>
-</header>
+    </header>
 
     <main>
-        
-        <section class="hero" aria-labelledby="hero-title">
+        <!-- Hero секция -->
+        <section class="hero">
             <div class="pure-g">
-                <div class="pure-u-1 pure-u-md-2-3">
-                    <h1 id="hero-title" class="hero-title">Найдите идеальное путешествие</h1>
-                    <p class="hero-subtitle">Поиск авиабилетов, ЖД билетов и автобусов в одном окне. Быстро, доступно, честно.</p>
+                <div class="pure-u-1 pure-u-md-2-3 hero-left-col">
+                    <h1 class="hero-title">Найдите идеальное путешествие</h1>
+                    <p class="hero-subtitle">Поиск авиабилетов, ЖД билетов и автобусов в одном окне.</p>
                     
-                    
-                    <div class="search-form" role="search">
-                        <form action="#" method="get">
-                            <div class="pure-g" style="gap: 1rem 0;">
-                                <div class="pure-u-1 pure-u-md-1-3">
-                                    <label for="from" class="sr-only">Откуда</label>
-                                    <input type="text" id="from" placeholder="Откуда" aria-label="Город вылета" value="Москва">
+                    <div id="vue-search">
+                        <div class="search-form">
+                            <form id="searchForm">
+                                <div class="pure-g" style="gap: 1rem 0;">
+                                    <div class="pure-u-1 pure-u-md-1-3">
+                                        <input type="text" id="fromInput" placeholder="Откуда" value="Москва">
+                                    </div>
+                                    <div class="pure-u-1 pure-u-md-1-3">
+                                        <input type="text" id="toInput" placeholder="Куда" value="Сочи">
+                                    </div>
+                                    <div class="pure-u-1 pure-u-md-1-3">
+                                        <input type="date" id="dateInput" value="2026-06-15">
+                                    </div>
                                 </div>
-                                <div class="pure-u-1 pure-u-md-1-3">
-                                    <label for="to" class="sr-only">Куда</label>
-                                    <input type="text" id="to" placeholder="Куда" aria-label="Город прибытия" value="Сочи">
-                                </div>
-                                <div class="pure-u-1 pure-u-md-1-3">
-                                    <label for="date" class="sr-only">Дата</label>
-                                    <input type="date" id="date" aria-label="Дата вылета" value="2026-06-15">
-                                </div>
-                            </div>
-                            
-                            
-                            <div class="pure-g" style="margin-top: 1rem;">
-                                <div class="pure-u-1">
-                                    <fieldset>
-                                        <legend class="sr-only">Вид транспорта</legend>
+                                <div class="pure-g" style="margin-top: 1rem;">
+                                    <div class="pure-u-1">
                                         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                                            <label class="pure-radio">
-                                                <input type="radio" name="transport" value="avia" checked> ✈️ Авиа
-                                            </label>
-                                            <label class="pure-radio">
-                                                <input type="radio" name="transport" value="train"> 🚂 ЖД
-                                            </label>
-                                            <label class="pure-radio">
-                                                <input type="radio" name="transport" value="bus"> 🚌 Автобусы
-                                            </label>
+                                            <label class="pure-radio"><input type="radio" name="transport" value="avia" checked> ✈️ Авиа</label>
+                                            <label class="pure-radio"><input type="radio" name="transport" value="train"> 🚂 ЖД</label>
+                                            <label class="pure-radio"><input type="radio" name="transport" value="bus"> 🚌 Автобусы</label>
                                         </div>
-                                    </fieldset>
+                                    </div>
+                                </div>
+                                <button type="button" id="searchBtn" class="pure-button pure-button-primary button-large" style="width: 100%; margin-top: 1.5rem;">
+                                    <i class="fas fa-search"></i> Найти билеты
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="pure-u-1 pure-u-md-1-3" style="display: flex; align-items: center; justify-content: center;">
+                    <img src="https://i.pinimg.com/originals/00/4f/7a/004f7ae20553beab56bbbad009ec1a48.jpg" alt="Путешествия" style="max-width: 100%; border-radius: 8px;">
+                </div>
+            </div>
+        </section>
+
+        <!-- Преимущества -->
+        <section id="about" class="pure-g" style="padding: 4rem 0;">
+            <div class="pure-u-1"><h2 class="section-title">Почему выбирают TripWise</h2></div>
+            <div class="pure-u-1 pure-u-md-1-3">
+                <div class="benefit-card"><div class="benefit-icon"><i class="fas fa-rocket"></i></div><h3>Молниеносная скорость</h3><p>Меньше 1000 элементов на странице — никаких тормозов.</p></div>
+            </div>
+            <div class="pure-u-1 pure-u-md-1-3">
+                <div class="benefit-card"><div class="benefit-icon"><i class="fas fa-universal-access"></i></div><h3>Доступно каждому</h3><p>Высокий контраст, поддержка скринридеров и крупные кнопки.</p></div>
+            </div>
+            <div class="pure-u-1 pure-u-md-1-3">
+                <div class="benefit-card"><div class="benefit-icon"><i class="fas fa-wallet"></i></div><h3>Честная экономия</h3><p>Сравниваем все виды транспорта — выбирайте выгодный вариант.</p></div>
+            </div>
+        </section>
+
+        <!-- Как работает -->
+        <section id="how" class="how-it-works">
+            <div class="pure-g"><div class="pure-u-1"><h2 class="section-title">Как это работает</h2></div></div>
+            <div class="pure-g">
+                <div class="pure-u-1 pure-u-md-1-4"><div class="step"><div class="step-number">1</div><h3>Поиск</h3><p>Введите маршрут и дату</p></div></div>
+                <div class="pure-u-1 pure-u-md-1-4"><div class="step"><div class="step-number">2</div><h3>Сравнение</h3><p>Выберите лучший вариант</p></div></div>
+                <div class="pure-u-1 pure-u-md-1-4"><div class="step"><div class="step-number">3</div><h3>Бронирование</h3><p>Заполните данные</p></div></div>
+                <div class="pure-u-1 pure-u-md-1-4"><div class="step"><div class="step-number">4</div><h3>Оплата</h3><p>Безопасный платеж</p></div></div>
+            </div>
+        </section>
+
+        <!-- Популярные направления (Vue) -->
+        <section style="padding: 4rem 0;">
+            <h2 class="section-title">Популярные направления</h2>
+            <div id="vue-app">
+                <div class="filters-panel">
+                    <div class="pure-g">
+                        <div class="pure-u-1 pure-u-md-1-2">
+                            <div class="filter-group">
+                                <label>Транспорт:</label>
+                                <div>
+                                    <button v-for="opt in transportOptions" :key="opt.value" @click="setTransport(opt.value)" :class="['filter-btn', { active: selectedTransport === opt.value }]">{{ opt.label }}</button>
                                 </div>
                             </div>
-                            
-                            <button type="submit" class="pure-button pure-button-primary button-large" style="width: 100%; margin-top: 1.5rem;" aria-label="Найти билеты">
-                                <i class="fas fa-search" aria-hidden="true"></i> Найти билеты
-                            </button>
-                        </form>
+                        </div>
+                        <div class="pure-u-1 pure-u-md-1-2">
+                            <div class="filter-group">
+                                <label>Сортировка:</label>
+                                <div>
+                                    <button v-for="opt in sortOptions" :key="opt.value" @click="setSort(opt.value)" :class="['filter-btn', { active: sortBy === opt.value }]">{{ opt.label }}</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    
-                    
-                    <div class="filter-buttons">
-                        <button class="filter-btn" aria-label="Самые дешевые билеты">
-                            <i class="fas fa-tag" aria-hidden="true"></i> Самый дешевый
-                        </button>
-                        <button class="filter-btn" aria-label="Самые быстрые рейсы">
-                            <i class="fas fa-clock" aria-hidden="true"></i> Самый быстрый
-                        </button>
-                        <button class="filter-btn" aria-label="Без пересадок">
-                            <i class="fas fa-plane" aria-hidden="true"></i> Без пересадок
-                        </button>
-                    </div>
+                    <div class="stats">📊 Найдено: {{ filteredTrips.length }} направлений</div>
                 </div>
                 
-                <div class="pure-u-1 pure-u-md-1-3" style="display: flex; align-items: center; justify-content: center;">
-                    <!-- Изображение с width/height для CLS -->
-                    <img src="https://i.pinimg.com/originals/00/4f/7a/004f7ae20553beab56bbbad009ec1a48.jpg" 
-                         alt="Путешествия" 
-                         width="400" 
-                         height="300"
-                         style="max-width: 100%; height: auto; border-radius: 8px;">
-                </div>
-            </div>
-        </section>
-
-        <!-- ПРЕИМУЩЕСТВА (Уровень 2) -->
-       <section id="about" class="pure-g" style="padding: 4rem 0;" aria-labelledby="benefits-title">
-            <div class="pure-u-1">
-                <h2 id="benefits-title" class="section-title">Почему выбирают TripWise</h2>
-            </div>
-            
-            <!-- Сетка карточек (3 колонки на десктопе) -->
-            <div class="pure-u-1 pure-u-md-1-3">
-                <div class="benefit-card">
-                    <div class="benefit-icon" aria-hidden="true">
-                        <i class="fas fa-rocket"></i>
-                    </div>
-                    <h3>Молниеносная скорость</h3>
-                    <p>Меньше 1000 элементов на странице — никаких тормозов. Поиск за секунды.</p>
-                </div>
-            </div>
-            
-            <div class="pure-u-1 pure-u-md-1-3">
-                <div class="benefit-card">
-                    <div class="benefit-icon" aria-hidden="true">
-                        <i class="fas fa-universal-access"></i>
-                    </div>
-                    <h3>Доступно каждому</h3>
-                    <p>Высокий контраст, поддержка скринридеров и крупные кнопки для всех.</p>
-                </div>
-            </div>
-            
-            <div class="pure-u-1 pure-u-md-1-3">
-                <div class="benefit-card">
-                    <div class="benefit-icon" aria-hidden="true">
-                        <i class="fas fa-wallet"></i>
-                    </div>
-                    <h3>Честная экономия</h3>
-                    <p>Сравниваем авиа, ЖД и автобусы — выбирайте самый выгодный вариант.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- КАК РАБОТАЕТ (Уровень 2) -->
-        <section id="how" class="how-it-works" aria-labelledby="how-title">
-            <div class="pure-g">
-                <div class="pure-u-1">
-                    <h2 id="how-title" class="section-title">Как это работает</h2>
-                </div>
-            </div>
-            
-            <div class="pure-g">
-                <div class="pure-u-1 pure-u-md-1-4">
-                    <div class="step">
-                        <div class="step-number" aria-hidden="true">1</div>
-                        <h3>Поиск</h3>
-                        <p>Введите маршрут и дату</p>
-                    </div>
-                </div>
+                <div v-if="filteredTrips.length === 0" class="empty-state">🚀 Нет направлений, соответствующих фильтрам</div>
                 
-                <div class="pure-u-1 pure-u-md-1-4">
-                    <div class="step">
-                        <div class="step-number" aria-hidden="true">2</div>
-                        <h3>Сравнение</h3>
-                        <p>Выберите лучший вариант</p>
-                    </div>
-                </div>
-                
-                <div class="pure-u-1 pure-u-md-1-4">
-                    <div class="step">
-                        <div class="step-number" aria-hidden="true">3</div>
-                        <h3>Бронирование</h3>
-                        <p>Заполните данные пассажиров</p>
-                    </div>
-                </div>
-                
-                <div class="pure-u-1 pure-u-md-1-4">
-                    <div class="step">
-                        <div class="step-number" aria-hidden="true">4</div>
-                        <h3>Оплата</h3>
-                        <p>Безопасный платеж</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Блок автозаполнения (UX-фишка) -->
-            <div class="pure-g" style="margin-top: 3rem;">
-                <div class="pure-u-1" style="text-align: center;">
-                    <div style="background: white; padding: 1.5rem; border-radius: 8px; display: inline-block;">
-                        <p><strong>👋 Иван, ваш последний поиск:</strong> Москва → Сочи, 15 июня</p>
-                        <button class="pure-button pure-button-primary" style="margin-top: 0.5rem;">
-                            <i class="fas fa-user-check" aria-hidden="true"></i> Заполнить из профиля
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Пример результатов поиска (для демонстрации) -->
-        <section style="padding: 4rem 0;" aria-labelledby="results-title">
-            <h2 id="results-title" class="section-title">Популярные направления</h2>
-            
-            <div class="pure-g" style="gap: 1rem 0;">
-                <!-- Карточка билета 1 -->
-                <div class="pure-u-1 pure-u-md-1-2">
-                    <div style="border: 1px solid #eee; padding: 1.5rem; border-radius: 8px; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-                        <div style="width: 48px; height: 48px; background: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-plane" aria-hidden="true"></i>
-                        </div>
-                        <div style="flex: 1;">
-                            <h3 style="margin: 0;">✈️ S7 Airlines</h3>
-                            <p style="margin: 0; color: #333;">Москва → Сочи · 10:00 → 12:30</p>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-size: 1.5rem; font-weight: bold; color: #000;">5 990 ₽</div>
-                            <button class="pure-button pure-button-primary" style="margin-top: 0.5rem;">Выбрать</button>
+                <!-- Сетка с фиксированными карточками -->
+                <div class="trips-grid">
+                    <div v-for="trip in filteredTrips" :key="trip.id" class="trip-card-wrapper">
+                        <div class="trip-card" :class="{ favorite: trip.favorite }">
+                            <div class="trip-card-top">
+                                <div class="trip-icon"><i :class="getIcon(trip.transport)"></i></div>
+                                <div class="trip-info">
+                                    <h3>{{ trip.company }}</h3>
+                                    <p>{{ trip.from }} → {{ trip.to }} · {{ trip.time }}</p>
+                                </div>
+                            </div>
+                            <div class="trip-card-bottom">
+                                <div class="trip-price">{{ formatPrice(trip.price) }} ₽</div>
+                                <div class="trip-actions">
+                                    <button @click="toggleFavorite(trip.id)" class="favorite-btn">{{ trip.favorite ? '❤️' : '🤍' }}</button>
+                                    <button class="select-btn">Выбрать</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Карточка билета 2 -->
-                <div class="pure-u-1 pure-u-md-1-2">
-                    <div style="border: 1px solid #eee; padding: 1.5rem; border-radius: 8px; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-                        <div style="width: 48px; height: 48px; background: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-train" aria-hidden="true"></i>
-                        </div>
-                        <div style="flex: 1;">
-                            <h3 style="margin: 0;">🚂 РЖД</h3>
-                            <p style="margin: 0; color: #333;">Москва → Сочи · 23:00 → 10:30</p>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-size: 1.5rem; font-weight: bold; color: #000;">3 200 ₽</div>
-                            <button class="pure-button pure-button-primary" style="margin-top: 0.5rem;">Выбрать</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Пагинация -->
-            <div style="text-align: center; margin-top: 2rem;">
-                <button class="pure-button" style="margin: 0 0.25rem; min-width: 48px;">◀</button>
-                <button class="pure-button pure-button-primary" style="margin: 0 0.25rem; min-width: 48px;">1</button>
-                <button class="pure-button" style="margin: 0 0.25rem; min-width: 48px;">2</button>
-                <button class="pure-button" style="margin: 0 0.25rem; min-width: 48px;">3</button>
-                <button class="pure-button" style="margin: 0 0.25rem; min-width: 48px;">▶</button>
             </div>
         </section>
     </main>
 
-    <!-- ФУТЕР (Уровень 2) -->
-    <!-- ФУТЕР (единый для всех страниц) -->
-<!-- ФУТЕР (единый для всех страниц) -->
-<!-- ФУТЕР (единый для всех страниц) -->
-<footer class="footer">
-    <div class="pure-g">
-        <!-- Колонка 1: О проекте -->
-        <div class="pure-u-1 pure-u-md-1-3">
-            <div class="footer-section">
-                <h3>TripWise</h3>
-                <p>Умный поиск путешествий</p>
-                <p>© 2026 Все права защищены</p>
-            </div>
+    <footer class="footer">
+        <div class="pure-g">
+            <div class="pure-u-1 pure-u-md-1-3"><div class="footer-section"><h3>TripWise</h3><p>Умный поиск путешествий</p><p>© 2026 Все права защищены</p></div></div>
+            <div class="pure-u-1 pure-u-md-1-3"><div class="footer-section"><h4>Контакты</h4><p>support@tripwise.ru</p><p>+7 (495) 123-45-67</p><p>Москва, ул. Арбат, 10</p></div></div>
+            <div class="pure-u-1 pure-u-md-1-3"><div class="footer-section"><h4>Мы в соцсетях</h4><div class="social-links"><a href="#"><i class="fab fa-telegram"></i></a><a href="#"><i class="fab fa-vk"></i></a><a href="#"><i class="fab fa-youtube"></i></a></div></div></div>
         </div>
-        
-        <!-- Колонка 2: Контакты -->
-        <div class="pure-u-1 pure-u-md-1-3">
-            <div class="footer-section">
-                <h4>Контакты</h4>
-                <address style="font-style: normal;">
-                    <p><i class="fas fa-envelope" aria-hidden="true"></i> support@tripwise.ru</p>
-                    <p><i class="fas fa-phone" aria-hidden="true"></i> +7 (495) 123-45-67</p>
-                    <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Москва, ул. Арбат, 10</p>
-                </address>
-            </div>
-        </div>
-        
-        <!-- Колонка 3: Соцсети и ссылки -->
-        <div class="pure-u-1 pure-u-md-1-3">
-            <div class="footer-section">
-                <h4>Мы в соцсетях</h4>
-                <div class="social-links">
-                    <a href="404.html" aria-label="Telegram (тестовая страница)"><i class="fab fa-telegram"></i></a>
-                    <a href="404.html" aria-label="VK (тестовая страница)"><i class="fab fa-vk"></i></a>
-                    <a href="404.html" aria-label="YouTube (тестовая страница)"><i class="fab fa-youtube"></i></a>
-                </div>
-                
-                <h4 style="margin-top: 1.5rem;">Информация</h4>
-                <p><a href="404.html">Политика конфиденциальности</a></p>
-                <p><a href="404.html">Пользовательское соглашение</a></p>
-            </div>
-        </div>
-    </div>
-</footer>
+    </footer>
 
-    <!-- Модальное окно 404 (скрыто, для демонстрации) -->
-    <div hidden>
-        <!-- Это просто заглушка для 404 страницы -->
-    </div>
+    <script>
+        // Форма поиска
+        document.getElementById('searchBtn').addEventListener('click', function() {
+            const from = document.getElementById('fromInput').value;
+            const to = document.getElementById('toInput').value;
+            const date = document.getElementById('dateInput').value;
+            const transport = document.querySelector('input[name="transport"]:checked').value;
+            let transportText = transport === 'avia' ? '✈️ Авиа' : (transport === 'train' ? '🚂 ЖД' : '🚌 Автобусы');
+            alert(`🔍 Поиск билетов: ${from} → ${to}\n📅 Дата: ${date}\n🚆 Транспорт: ${transportText}`);
+        });
+
+        // Vue приложение
+        const { createApp, ref, computed } = Vue;
+        
+        createApp({
+            setup() {
+                const trips = ref([
+                    { id: 1, from: 'Москва', to: 'Сочи', time: '10:00 → 12:30', price: 5990, transport: 'avia', company: 'S7 Airlines', favorite: false },
+                    { id: 2, from: 'Москва', to: 'Сочи', time: '23:00 → 10:30', price: 3200, transport: 'train', company: 'РЖД', favorite: false },
+                    { id: 3, from: 'Санкт-Петербург', to: 'Москва', time: '08:00 → 10:15', price: 4500, transport: 'avia', company: 'Аэрофлот', favorite: false },
+                    { id: 4, from: 'Москва', to: 'Казань', time: '14:30 → 17:45', price: 3800, transport: 'train', company: 'РЖД', favorite: false }
+                ]);
+                
+                const selectedTransport = ref('all');
+                const sortBy = ref('price');
+                
+                const transportOptions = [
+                    { value: 'all', label: '🚀 Все' },
+                    { value: 'avia', label: '✈️ Авиа' },
+                    { value: 'train', label: '🚂 ЖД' }
+                ];
+                
+                const sortOptions = [
+                    { value: 'price', label: '💰 По цене' },
+                    { value: 'time', label: '⏰ По времени' }
+                ];
+                
+                // Загрузка избранного
+                const saved = localStorage.getItem('tripwise-favorites');
+                if (saved) {
+                    const favorites = JSON.parse(saved);
+                    trips.value.forEach(trip => { if (favorites.includes(trip.id)) trip.favorite = true; });
+                }
+                
+                const saveFavorites = () => {
+                    const favorites = trips.value.filter(t => t.favorite).map(t => t.id);
+                    localStorage.setItem('tripwise-favorites', JSON.stringify(favorites));
+                };
+                
+                const toggleFavorite = (id) => {
+                    const trip = trips.value.find(t => t.id === id);
+                    if (trip) { trip.favorite = !trip.favorite; saveFavorites(); }
+                };
+                
+                const setTransport = (value) => { selectedTransport.value = value; };
+                const setSort = (value) => { sortBy.value = value; };
+                
+                const getIcon = (transport) => {
+                    if (transport === 'avia') return 'fas fa-plane';
+                    if (transport === 'train') return 'fas fa-train';
+                    return 'fas fa-globe';
+                };
+                
+                const formatPrice = (price) => price.toLocaleString();
+                
+                const filteredTrips = computed(() => {
+                    let result = [...trips.value];
+                    if (selectedTransport.value !== 'all') {
+                        result = result.filter(t => t.transport === selectedTransport.value);
+                    }
+                    if (sortBy.value === 'price') {
+                        result.sort((a, b) => a.price - b.price);
+                    } else if (sortBy.value === 'time') {
+                        result.sort((a, b) => parseInt(a.time.split(':')[0]) - parseInt(b.time.split(':')[0]));
+                    }
+                    return result;
+                });
+                
+                return {
+                    trips, selectedTransport, sortBy, transportOptions, sortOptions,
+                    filteredTrips, toggleFavorite, setTransport, setSort, getIcon, formatPrice
+                };
+            }
+        }).mount('#vue-app');
+        
+        // Подсветка активного меню
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        document.querySelectorAll('.nav-link').forEach(link => {
+            const linkPage = link.getAttribute('href').split('#')[0];
+            if (currentPage === linkPage || (currentPage === '' && linkPage === 'index.html')) {
+                link.classList.add('active');
+            }
+        });
+    </script>
 </body>
 </html>
